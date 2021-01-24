@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flights Login and Signup</title>
+	<link rel="stylesheet" type="text/css" href="CSS/loginandsignstyle.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+</head>
+<body>
+
+<div class="container" id="container">
+<div class="form-container sign-up-container">
+
+<form action="Signupflights" method="post">
+	<h1>Create Account</h1>
+	<div class="social-container">
+		<a href="#" class="social"><i class="fa fa-facebook"></i></a>
+		<a href="#" class="social"><i class="fa fa-google"></i></a>
+		<a href="#" class="social"><i class="fa fa-linkedin"></i></a>
+	</div>
+	<span>or use your email for registration</span>
+        <input type="text" name="name" placeholder="Name" required="">
+	<input type="email" name="email" placeholder="Email" id="regemail" onkeyup="validateemail()">
+        <div id="emval" style="color: red;"></div>
+        <input type="password" name="password" placeholder="Password" required="">
+        <input type ="number" name ="phonenum" placeholder="Phone Number" id="phno" onkeyup="validatephonenumber()">
+        <div id="phval" style="color:red;"></div>
+        <button type="submit" id="register">SignUp</button>
+</form>
+</div>
+<div class="form-container sign-in-container">
+    <form action="FlightAuthentication" method="post">
+		<h1>Sign In</h1>
+		<div class="social-container">
+		<a href="#" class="social"><i class="fa fa-facebook"></i></a>
+		<a href="#" class="social"><i class="fa fa-google"></i></a>
+		<a href="#" class="social"><i class="fa fa-linkedin"></i></a>
+	</div>
+	<span>or use your account</span>
+	<input type="email" name="email" placeholder="Email">
+	<input type="password" name="password" placeholder="Password">
+	<a href="#">Forgot Your Password</a>
+
+	<button type="submit" >Sign In</button>
+	</form>
+</div>
+<div class="overlay-container">
+	<div class="overlay">
+		<div class="overlay-panel overlay-left">
+			<h1>Welcome Back!</h1>
+			<p>To keep connected with us please login with your personal info</p>
+			<button class="ghost" id="signIn">Sign In</button>
+		</div>
+		<div class="overlay-panel overlay-right">
+			<h1>Hello!</h1>
+			<p>Enter your details and start journey with us</p>
+			<button class="ghost" id="signUp">Sign Up</button>
+		</div>
+	</div>
+</div>
+</div>
+    
+<script type="text/javascript">
+	const signUpButton = document.getElementById('signUp');
+	const signInButton = document.getElementById('signIn');
+	const container = document.getElementById('container');
+
+	signUpButton.addEventListener('click', () => {
+		container.classList.add("right-panel-active");
+	});
+	signInButton.addEventListener('click', () => {
+		container.classList.remove("right-panel-active");
+	});
+</script>
+<script type="text/javascript">
+    var setbyemail=false;
+    var setbyph=false;
+    function validateemail(){
+        var reqemail = init();
+        function init(){ 
+            if (window.XMLHttpRequest) { 
+                return new XMLHttpRequest(); 
+            } else if (window.ActiveXObject) { 
+                return new ActiveXObject("Microsoft.XMLHTTP"); 
+            } 
+        } 
+    var emval=document.getElementById("regemail");
+    reqemail.open("GET","suemailval?email="+encodeURIComponent(emval.value), true);
+    reqemail.onreadystatechange=processRequestemail;
+    reqemail.send(null);
+    
+    function processRequestemail(){
+        if(reqemail.readyState == 4){
+            if(reqemail.status==200){
+                processResponseemail();
+            }
+        }
+    }
+    
+    function processResponseemail(){
+        var xmlmsg = reqemail.responseXML;
+        var valid=xmlmsg.getElementsByTagName("valid")[0].firstChild.nodeValue;
+        if(valid=="true"){
+            var valemail=document.getElementById("emval");
+            valemail.innerHTML = ""
+            if(setbyph == false){
+                document.getElementById("register").disabled = false;
+                setbyemail=false;
+            }
+        }
+        else{
+            var valemail=document.getElementById("emval");
+            valemail.innerHTML = "Email already registered";
+            if(setbyph == false){
+                document.getElementById("register").disabled = true;
+                setbyemail=true;
+            }
+         }
+    }
+}
+    
+    
+</script>
+<script type="text/javascript">
+    function validatephonenumber(){
+        var reqph = init();
+        function init(){ 
+            if (window.XMLHttpRequest) { 
+                return new XMLHttpRequest(); 
+            } else if (window.ActiveXObject) { 
+                return new ActiveXObject("Microsoft.XMLHTTP"); 
+            } 
+        } 
+    var phno=document.getElementById("phno");
+    reqph.open("GET","suphval?phno="+encodeURIComponent(phno.value), true);
+    reqph.onreadystatechange=processRequestphno;
+    reqph.send(null);
+    
+    function processRequestphno(){
+        if(reqph.readyState == 4){
+            if(reqph.status==200){
+                processResponsephno();
+            }
+        }
+    }
+    
+    function processResponsephno(){
+        var xmlmsg = reqph.responseXML;
+        var valid=xmlmsg.getElementsByTagName("valid")[0].firstChild.nodeValue;
+        if(valid=="true"){
+            var valph=document.getElementById("phval");
+            valph.innerHTML = "";
+            if(setbyemail == false){
+                document.getElementById("register").disabled = false;
+                setbyph = false;
+        }
+        }
+        else{
+            var valph=document.getElementById("phval");
+            valph.innerHTML = "Phone Number already registered";
+            if(setbyemail == false){
+                document.getElementById("register").disabled = true;
+                setbyph = true;
+            }
+         }
+    }
+    }
+    
+    
+</script>
+
+</body>
+</html>
+
+
+
